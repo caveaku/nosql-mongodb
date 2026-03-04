@@ -4,6 +4,17 @@ kind: Namespace
 metadata:
   name: mongodb-prod
 ---
+# StorageClass for EBS gp3
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: gp3
+provisioner: ebs.csi.aws.com
+volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true
+parameters:
+  type: gp3
+---
 apiVersion: v1
 kind: Secret
 metadata:
@@ -81,9 +92,11 @@ spec:
   podManagementPolicy: Parallel
   updateStrategy:
     type: RollingUpdate
+
   selector:
     matchLabels:
       app: mongodb
+
   template:
     metadata:
       labels:
@@ -161,7 +174,8 @@ spec:
     - metadata:
         name: mongo-data
       spec:
-        accessModes: ["ReadWriteOnce"]
+        accessModes:
+          - ReadWriteOnce
         storageClassName: gp3
         resources:
           requests:
