@@ -19,7 +19,7 @@ metadata:
   name: mongodb
   namespace: mongodb-dev
 spec:
-  replicas: 1
+  replicas: 5
   selector:
     matchLabels:
       app: mongodb
